@@ -1,34 +1,26 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+'use client';
+import { CssBaseline, Container } from '@mui/material';
+import { ReactNode } from 'react';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+interface LayoutProps {
+  children: ReactNode;
+}
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "CPM Method",
-  description: "Super team",
-};
-
-export default function RootLayout({
-                                     children,
-                                   }: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: LayoutProps) {
   return (
-    <html lang="en">
-    <body
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-    >
-    {children}
-    </body>
+    <html>
+      <head>
+        <title>CPM Method</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      </head>
+
+      <body>
+        <CssBaseline/>
+
+        <Container maxWidth="md">
+          {children}
+        </Container>
+      </body>
     </html>
-  );
+  )
 }
