@@ -23,9 +23,10 @@ export async function GET(request: Request, { params }: { params: { projectId: s
   const tasks: Task[] = await db.all('SELECT * FROM tasks WHERE project_id = ?', projectId);
 
   tasks.forEach(task => {
-    // @ts-ignore
     task.dependencies = task.dependencies ? JSON.parse(task.dependencies) : [];
   });
+
+  console.error(tasks);
 
   const tasksMap: { [key: number]: Task } = {};
 

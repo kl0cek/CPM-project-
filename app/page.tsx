@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button, TextField, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Button, TextField, List, ListItem, ListItemText, Typography, Box } from '@mui/material';
 import Link from 'next/link';
 
 interface Project {
@@ -34,6 +34,18 @@ export default function HomePage() {
     fetchProjects();
   };
 
+  const handleDeleteProject = async (projectId: number) => {
+    if (!window.confirm('Are you sure you want to delete this project?')) return;
+    const res = await fetch(`/api/project/${projectId}`, {
+      method: 'DELETE'
+    });
+    if (res.ok) {
+      fetchProjects();
+    } else {
+      console.error('Failed to delete project');
+    }
+  };
+
   return (
     <div>
       <Typography variant="h4" gutterBottom>CPM Project Management</Typography>
@@ -49,9 +61,14 @@ export default function HomePage() {
       <List>
         {projects.map(project => (
           <ListItem key={project.id}>
-            <Link href={`/project/${project.id}`}>
-              <ListItemText primary={project.name} />
-            </Link>
+            <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+              <Link href={`/project/${project.id}`}>
+                <ListItemText primary={project.name} />
+              </Link>
+              <Button variant="outlined" color="error" onClick={() => handleDeleteProject(project.id)}>
+                Delete
+              </Button>
+            </Box>
           </ListItem>
         ))}
       </List>
