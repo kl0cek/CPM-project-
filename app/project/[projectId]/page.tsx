@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Typography, TextField, Button, List, ListItem, ListItemText, Box, Paper } from '@mui/material';
+import { Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography, TextField, Button, List, ListItem, ListItemText, Box, Paper } from '@mui/material';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -9,6 +15,8 @@ import { useParams } from 'next/navigation';
 import ReactFlow, { MiniMap, Controls, Background, Node, Edge } from 'react-flow-renderer';
 // Import dla Google Charts
 import { Chart } from 'react-google-charts';
+
+
 
 interface Task {
   id: number;
@@ -108,15 +116,21 @@ function EnhancedGanttChart({ tasks, projectDuration }: { tasks: Task[]; project
     ]);
   });
 
+
   const options = {
     height: 400,
     gantt: {
       trackHeight: 30,
       criticalPathEnabled: true,
+      // dodanie zmiany koloru do granch chartta
+      criticalPathStyle: {
+        stroke: '#ff0000',
+        strokeWidth: 4,
+      },
       arrow: {
         angle: 100,
         width: 5,
-        color: 'red',
+        color: '#0000FF',
         radius: 0,
       },
     },
@@ -357,17 +371,45 @@ export default function ProjectPage() {
             <EnhancedGanttChart tasks={cpmResult.tasks} projectDuration={cpmResult.projectDuration} />
           </Box>
           <Box mt={2}>
-            <Typography variant="body1">Tasks Details:</Typography>
-            {cpmResult.tasks.map(task => (
-              <Paper key={task.id} style={{ padding: '10px', marginBottom: '10px' }}>
-                <Typography>Task: {task.name} (ID: {task.id})</Typography>
-                <Typography>Duration: {task.duration}</Typography>
-                <Typography>ES: {task.ES}, EF: {task.EF}</Typography>
-                <Typography>LS: {task.LS}, LF: {task.LF}</Typography>
-                <Typography>Slack: {task.slack}</Typography>
-                <Typography>Critical: {task.isCritical ? 'Yes' : 'No'}</Typography>
-              </Paper>
-            ))}
+        <Typography variant="h6" gutterBottom>Tasks Details</Typography>
+            <TableContainer component={Paper}>
+              <Table size="small" aria-label="tasks table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell><strong>ID</strong></TableCell>
+                    <TableCell><strong>Name</strong></TableCell>
+                    <TableCell align="right"><strong>Duration</strong></TableCell>
+                    <TableCell align="right"><strong>ES</strong></TableCell>
+                    <TableCell align="right"><strong>EF</strong></TableCell>
+                    <TableCell align="right"><strong>LS</strong></TableCell>
+                    <TableCell align="right"><strong>LF</strong></TableCell>
+                    <TableCell align="right"><strong>Slack</strong></TableCell>
+                    <TableCell align="center"><strong>Critical</strong></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {cpmResult.tasks.map(task => (
+                    <TableRow
+                      key={task.id}
+                      // podswietlanie tej sciezki
+                      sx={task.isCritical ? { backgroundColor: '#ffe5e5' } : {}}
+                    >
+                      <TableCell>{task.id}</TableCell>
+                      <TableCell>{task.name}</TableCell>
+                      <TableCell align="right">{task.duration}</TableCell>
+                      <TableCell align="right">{task.ES}</TableCell>
+                      <TableCell align="right">{task.EF}</TableCell>
+                      <TableCell align="right">{task.LS}</TableCell>
+                      <TableCell align="right">{task.LF}</TableCell>
+                      <TableCell align="right">{task.slack}</TableCell>
+                      <TableCell align="center">
+                        {task.isCritical ? 'Yes' : 'No'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody> 
+              </Table>
+            </TableContainer>
           </Box>
         </Box>
       )}
