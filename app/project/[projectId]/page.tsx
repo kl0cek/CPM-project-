@@ -257,7 +257,7 @@ export default function ProjectPage() {
 
   return (
     <div>
-      <Link href="/"><Button variant="outlined" style={{ marginTop: '10px' }}>Back to Projects</Button></Link>
+      <Link href="/"><Button variant="outlined" sx={{ mb: 2 }}>Back to Projects</Button></Link>
       <Typography variant="h4" gutterBottom>{project ? project.name : "Project"}</Typography>
 
       <Box 

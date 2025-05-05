@@ -17,7 +17,7 @@ export default function RootLayout({ children }: LayoutProps) {
       <body>
         <CssBaseline/>
 
-        <Container maxWidth="md">
+        <Container maxWidth="md" sx={{pt: 5, pb: 10}}>
           {children}
         </Container>
       </body>

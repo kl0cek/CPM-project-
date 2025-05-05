@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDB } from '@/lib/database';
 
 export async function GET(request: Request, { params }: { params: { projectId: string } }) {
-  const { projectId } = params;
+  const { projectId } = await params;
 
   const db = await getDB();
 
@@ -16,7 +16,7 @@ export async function GET(request: Request, { params }: { params: { projectId: s
 }
 
 export async function POST(request: Request, { params }: { params: { projectId: string } }) {
-  const { projectId } = params;
+  const { projectId } =  await params;
 
   const body = await request.json();
 
@@ -60,7 +60,7 @@ export async function POST(request: Request, { params }: { params: { projectId: 
 }
 
 export async function PUT(request: Request, { params }: { params: { projectId: string, taskId: string } }) {
-  const { projectId, taskId } = params;
+  const { projectId, taskId } = await params;
   const body = await request.json();
   const { id, name, duration, dependencies } = body;
 
