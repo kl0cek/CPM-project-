@@ -260,6 +260,13 @@ export default function ProjectPage() {
       <Link href="/"><Button variant="outlined" style={{ marginTop: '10px' }}>Back to Projects</Button></Link>
       <Typography variant="h4" gutterBottom>{project ? project.name : "Project"}</Typography>
 
+      <Box 
+        mt={2}
+        display = "flex"
+        flexDirection={{ xs: 'column', md: 'row' }}
+        gap={2}
+      >
+      <Box flex={1}>
       <Paper style={{ padding: '16px', marginBottom: '20px' }}>
         <Typography variant="h6">Add Task</Typography>
         <TextField
@@ -293,7 +300,9 @@ export default function ProjectPage() {
         />
         <Button variant="contained" onClick={handleAddTask}>Add Task</Button>
       </Paper>
+      </Box>
 
+      <Box flex={1}>
       <Typography variant="h5" gutterBottom>Tasks</Typography>
       <List>
         {tasks.map(task => (
@@ -348,10 +357,14 @@ export default function ProjectPage() {
           </ListItem>
         ))}
       </List>
+      </Box>
+      </Box>
+
       <Box mt={2}>
         <Button variant="contained" onClick={handleCalculateCPM}>Calculate CPM</Button>
         <Button variant="outlined" onClick={handleExportPDF} style={{ marginLeft: '10px' }}>Export PDF</Button>
       </Box>
+      
       {cpmResult && (
         <Box mt={4}>
           <Typography variant="h5">CPM Analysis</Typography>
