@@ -66,6 +66,7 @@ function FlowNetworkDiagram({ tasks }: { tasks: Task[] }) {
         target: task.id.toString(),
         animated: !!task.isCritical,
         style: { stroke: '#000' },
+        //@ts-ignore
         markerEnd: { type: 'arrowclosed' },
       });
     });
@@ -104,15 +105,8 @@ function EnhancedGanttChart({ tasks, projectDuration }: { tasks: Task[]; project
   tasks.forEach(task => {
     const startDate = new Date(baseline.getTime() + ((task.ES || 0) * 24 * 60 * 60 * 1000));
     const endDate = new Date(baseline.getTime() + (task.EF! * 24 * 60 * 60 * 1000));
-    data.push([
-      task.id.toString(),
-      task.name,
-      '',
-      startDate,
-      endDate,
-      null,
-      100,
-      task.dependencies.join(','),
+    //@ts-ignore
+    data.push([ task.id.toString(), task.name, '', startDate, endDate, null, 100, task.dependencies.join(','),
     ]);
   });
 

@@ -28,7 +28,6 @@ export async function GET(
   context: { params: { projectId: string } }
 ) {
   try {
-    // Get the projectId from params - using context.params structure
     const projectId = context.params.projectId;
 
     if (!projectId) {
@@ -142,51 +141,28 @@ export async function GET(
     });
     const results = Object.values(tasksMap);
 
-    // Create PDFDocument without using pdfkit-table
     const doc = new PDFDocument({ margin: 40, size: 'A4'});
     
     let buffers: Uint8Array[] = [];
     doc.on('data', buffers.push.bind(buffers));
-    // to ta pierwsza tabelka do wyjebania
-    // doc.fontSize(20).text(`Project: ${project.name}`, { underline: true });
-    // doc.moveDown();
-    // doc.fontSize(14).text(`Project Duration: ${projectDuration}`);
-    // doc.moveDown();
-    // doc.fontSize(16).text("Tasks:");
-    // results.forEach(task => {
-    //   doc.moveDown(0.5);
-    //   doc.fontSize(12).text(`Task: ${task.name}`);
-    //   doc.text(`Duration: ${task.duration}`);
-    //   doc.text(`ES: ${task.ES}, EF: ${task.EF}, LS: ${task.LS}, LF: ${task.LF}, Slack: ${task.slack}`);
-    //   doc.text(`Critical: ${task.isCritical ? 'Yes' : 'No'}`);
-    // });
-
-    // doc.addPage();
-    // doc.fontSize(16).text("Tasks Table:", { underline: true });
-    // doc.moveDown();
     
     const columnWidths = [30, 120, 30, 30, 30, 30, 30, 40, 60];
     const startY = doc.y + 20;
     let currentY = startY;
     
-    // Draw header
     const headers = ['ID', 'Name', 'Dur.', 'ES', 'EF', 'LS', 'LF', 'Slack', 'Critical'];
     let currentX = 50;
     
-    // Draw header background
     doc.rect(40, currentY - 5, 400, 20).fill('#e0e0e0').restore();
     
-    // Draw header text
     doc.fillColor('black').font('Helvetica-Bold').fontSize(10);
     headers.forEach((header, i) => {
       doc.text(header, currentX, currentY, { width: columnWidths[i], align: 'center' });
       currentX += columnWidths[i];
     });
     
-    // Draw rows
     currentY += 20;
     results.forEach((task, rowIndex) => {
-      // Alternate row colors
       if (rowIndex % 2 === 0) {
         doc.rect(40, currentY - 5, 400, 20).fill('#f8f8f8');
       }
@@ -209,7 +185,7 @@ export async function GET(
       rowData.forEach((cell, i) => {
         doc.text(String(cell), currentX, currentY, { 
           width: columnWidths[i], 
-          align: i === 1 ? 'left' : 'center' // Align Name column to left, others to center
+          align: i === 1 ? 'left' : 'center' 
         });
         currentX += columnWidths[i];
       });
