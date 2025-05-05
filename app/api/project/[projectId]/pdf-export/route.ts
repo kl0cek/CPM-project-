@@ -6,6 +6,7 @@ import { getDB } from '@/lib/database';
 // @ts-ignore
 import PDFDocument from 'pdfkit/js/pdfkit.standalone';
 import getStream from 'get-stream';
+// nie wiem kurwa chuja dziala ta canva jebac frajera bez wykresow narazie :( 
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 
 interface Task {
@@ -45,6 +46,7 @@ export async function GET(
     const tasks: Task[] = await db.all('SELECT * FROM tasks WHERE project_id = ?', projectId);
 
     tasks.forEach(task => {
+      //@ts-ignore
       task.dependencies = task.dependencies ? JSON.parse(task.dependencies) : [];
     });
 
@@ -145,26 +147,24 @@ export async function GET(
     
     let buffers: Uint8Array[] = [];
     doc.on('data', buffers.push.bind(buffers));
+    // to ta pierwsza tabelka do wyjebania
+    // doc.fontSize(20).text(`Project: ${project.name}`, { underline: true });
+    // doc.moveDown();
+    // doc.fontSize(14).text(`Project Duration: ${projectDuration}`);
+    // doc.moveDown();
+    // doc.fontSize(16).text("Tasks:");
+    // results.forEach(task => {
+    //   doc.moveDown(0.5);
+    //   doc.fontSize(12).text(`Task: ${task.name}`);
+    //   doc.text(`Duration: ${task.duration}`);
+    //   doc.text(`ES: ${task.ES}, EF: ${task.EF}, LS: ${task.LS}, LF: ${task.LF}, Slack: ${task.slack}`);
+    //   doc.text(`Critical: ${task.isCritical ? 'Yes' : 'No'}`);
+    // });
 
-    doc.fontSize(20).text(`Project: ${project.name}`, { underline: true });
-    doc.moveDown();
-    doc.fontSize(14).text(`Project Duration: ${projectDuration}`);
-    doc.moveDown();
-    doc.fontSize(16).text("Tasks:");
-    results.forEach(task => {
-      doc.moveDown(0.5);
-      doc.fontSize(12).text(`Task: ${task.name}`);
-      doc.text(`Duration: ${task.duration}`);
-      doc.text(`ES: ${task.ES}, EF: ${task.EF}, LS: ${task.LS}, LF: ${task.LF}, Slack: ${task.slack}`);
-      doc.text(`Critical: ${task.isCritical ? 'Yes' : 'No'}`);
-    });
-
-    // Since pdfkit-table isn't working as expected, let's manually create a table
-    doc.addPage();
-    doc.fontSize(16).text("Tasks Table:", { underline: true });
-    doc.moveDown();
+    // doc.addPage();
+    // doc.fontSize(16).text("Tasks Table:", { underline: true });
+    // doc.moveDown();
     
-    // Define column widths and starting positions
     const columnWidths = [30, 120, 30, 30, 30, 30, 30, 40, 60];
     const startY = doc.y + 20;
     let currentY = startY;
@@ -174,10 +174,10 @@ export async function GET(
     let currentX = 50;
     
     // Draw header background
-    doc.rect(40, currentY - 5, 400, 20).fill('#e0e0e0');
+    doc.rect(40, currentY - 5, 400, 20).fill('#e0e0e0').restore();
     
     // Draw header text
-    doc.font('Helvetica-Bold').fontSize(10);
+    doc.fillColor('black').font('Helvetica-Bold').fontSize(10);
     headers.forEach((header, i) => {
       doc.text(header, currentX, currentY, { width: columnWidths[i], align: 'center' });
       currentX += columnWidths[i];
@@ -204,7 +204,7 @@ export async function GET(
       ];
       
       currentX = 50;
-      doc.font('Helvetica').fontSize(9).fillColor('#000');
+      doc.font('Helvetica').fontSize(9).fillColor('#111');
       
       rowData.forEach((cell, i) => {
         doc.text(String(cell), currentX, currentY, { 
