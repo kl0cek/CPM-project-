@@ -28,7 +28,8 @@ export async function GET(
   context: { params: { projectId: string } }
 ) {
   try {
-    const projectId = context.params.projectId;
+    const par = await context.params
+    const projectId = par.projectId;
 
     if (!projectId) {
       return NextResponse.json({ error: 'Project ID is required' }, { status: 400 });
